@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel GameBoy Calculator</title>
+    <title>Game Boy Calculator DMG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Pixel font */
 
         :root {
-            --gb-light-gray: #203d7b; /* Lighter gray for body */
-            --gb-dark-gray: #6691f4da;    /* Darker gray for accents/bezel */
-            --gb-black: rgb(228, 228, 228);       /* Border/Shadow color */
-            --gb-screen-bg: #9ebd9e; /* Classic green screen */
-            --gb-screen-text: #0f380f;/* Dark green text */
-            --gb-button-red: #cd310a; /* Magenta/Red for A/B */
-            --gb-button-dpad: rgb(104, 96, 96);   /* Dark gray for D-pad/Start/Select */
-            --gb-button-keypad: #656060; /* Slightly darker gray for keypad */
-            --gb-hard-shadow: #888; /* Shadow color, slightly lighter than pure black */
+            --gb-light-gray: #FFBC42; /* Lighter gray for body */
+            --gb-dark-gray: #252627 ;    /* Darker gray for accents/bezel */
+            --gb-black: #FFF9FB;       /* Border/Shadow color */
+            --gb-screen-bg: #549aa5; /* Classic green screen */
+            --gb-screen-text: #17226b;/* Dark green text */
+            --gb-button-red: #BB0A21; /* Magenta/Red for A/B */
+            --gb-button-dpad: #252627;   /* Dark gray for D-pad/Start/Select */
+            --gb-button-keypad: #252627; /* Slightly darker gray for keypad */
+            --gb-hard-shadow:#ce9834;
+            /*--gb-hard-shadow: #888; /* Shadow color, slightly lighter than pure black */
         }
 
         body {
@@ -26,7 +27,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #fce4ec; /* Light pink background like reference */
+            background-color: #547AA5; /* Light pink background like reference */
             /* Disable anti-aliasing */
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
@@ -35,17 +36,17 @@
 
         .calculator {
             background-color: var(--gb-light-gray);
-            border: 5px solid var(--gb-black);
+            border: 2px solid var(--gb-black);
             border-radius: 8px 8px 50px 8px; /* Classic bottom curve */
             padding: 20px;
             width: 320px; /* Adjusted width */
-            box-shadow: 10px 10px 0px var(--gb-hard-shadow);
+            box-shadow: 8px 8px 0px var(--gb-hard-shadow);
             position: relative; /* For positioning labels */
         }
 
         .screen-area {
             background-color: var(--gb-dark-gray);
-            border: 3px solid var(--gb-black);
+            border: 2px solid var(--gb-black);
             border-radius: 6px 6px 20px 6px; /* Rounded bottom corners for screen bezel */
             padding: 15px; /* Increased padding */
             margin: 0 auto 15px auto; /* Center the screen area */
@@ -56,8 +57,8 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
-            color: #d1e4f0; /* Lighter color for header text */
-            font-size: 8px; /* Smaller pixel font size */
+            color: #FFF9FB; /* Lighter color for header text */
+            font-size: 9px; /* Smaller pixel font size */
             letter-spacing: 1px; /* Space out letters */
             padding: 0 2px;
         }
@@ -111,7 +112,7 @@
          /* Style to make D-Pad look like one piece */
          .dpad::before {
              content: '';
-             position: relative;
+             position: absolute;
              width: 38  px;
              height: 38px;
              background: var(--gb-button-dpad); /* Cover the center */
@@ -127,7 +128,7 @@
              position: absolute;
              width: 38px;
              height: 38px;
-            /* background: var(--gb-button-dpad); /* Cover the center */
+             background: var(--gb-button-dpad); /* Cover the center */
              top: 38px;
              left: 38px;
              z-index: 0;
@@ -146,7 +147,8 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            color: var(--gb-light-gray); /* Arrow color */
+            /*color: var(--gb-light-gray); /* Arrow color */
+            color: #FFF9FB;
             font-family: sans-serif;
             font-size: 24px;
             font-weight: bold;
@@ -156,10 +158,10 @@
              border-radius: 3px; /* Slight rounding */
         }
         /* Remove borders where buttons meet */
-        .dpad-btn-up { grid-column: 2; grid-row: 1; border-bottom: none; border-radius: 4px 4px 0 0;}
-        .dpad-btn-left { grid-column: 1; grid-row: 2; border-right: none; border-radius: 4px 0 0 4px;}
-        .dpad-btn-right { grid-column: 3; grid-row: 2; border-left: none; border-radius: 0 4px 4px 0;}
-        .dpad-btn-down { grid-column: 2; grid-row: 3; border-top: none; border-radius: 0 0 4px 4px;}
+        .dpad-btn-up { grid-column: 2; grid-row: 1; border-bottom: 3; border-radius: 4px 4px 0 0;}
+        .dpad-btn-left { grid-column: 1; grid-row: 2; border-right: 3; border-radius: 4px 0 0 4px;}
+        .dpad-btn-right { grid-column: 3; grid-row: 2; border-left: 3; border-radius: 0 4px 4px 0;}
+        .dpad-btn-down { grid-column: 2; grid-row: 3; border-top: 3; border-radius: 0 0 4px 4px;}
 
         .action-buttons-container {
              position: relative; /* For A/B labels */
@@ -196,7 +198,7 @@
              position: absolute;
              font-size: 12px;
              color: var(--gb-button-red); /* Match button color */
-             bottom: -18px; /* Position below buttons */
+             bottom: -22px; /* Position below buttons */
          }
          .label-b {
              left: 28px; /* Position B label */
@@ -208,7 +210,7 @@
 
         .keypad-area {
              padding: 0 10px; /* Padding for keypad */
-             margin-bottom: 25px; /* Space below keypad */
+             margin-bottom: 30px; /* Space below keypad */
         }
 
         .keypad {
@@ -220,7 +222,7 @@
         .keypad-btn {
             height: 40px; /* Shorter keypad buttons */
             border: 2px solid var(--gb-black);
-            border-radius: 4px; /* Slightly more rounded */
+            border-radius: 15px; /* Slightly more rounded */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -229,12 +231,12 @@
             cursor: pointer;
             box-shadow: 2px 2px 0px var(--gb-hard-shadow);
             color: var(--gb-black);
-            padding-bottom: 3px;
+            padding-bottom: 2px;
             background-color: var(--gb-button-keypad); /* Gray keypad */
         }
 
         /* Maybe distinguish operator keys slightly if desired */
-        /* .operator-btn { background-color: #a0a0a0; } */
+        .operator-btn { background-color: #BB0A21; }
 
         .zero-btn {
             grid-column: span 2;

@@ -4,3 +4,4 @@
 # change_log
 v1.0: First iteration to understand the workflow.
 v1.1: Design Changes.
+v1.2: Minor Design Fixes, Color Changes
