@@ -3,45 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Game Boy Calculator</title>
+    <title>Pixel GameBoy Calculator</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Import a pixel font */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Pixel font */
+
+        :root {
+            --gb-light-gray: #203d7b; /* Lighter gray for body */
+            --gb-dark-gray: #6691f4da;    /* Darker gray for accents/bezel */
+            --gb-black: rgb(228, 228, 228);       /* Border/Shadow color */
+            --gb-screen-bg: #9ebd9e; /* Classic green screen */
+            --gb-screen-text: #0f380f;/* Dark green text */
+            --gb-button-red: #cd310a; /* Magenta/Red for A/B */
+            --gb-button-dpad: rgb(104, 96, 96);   /* Dark gray for D-pad/Start/Select */
+            --gb-button-keypad: #656060; /* Slightly darker gray for keypad */
+            --gb-hard-shadow: #888; /* Shadow color, slightly lighter than pure black */
+        }
 
         body {
-            /* Use a pixel font for the main interface elements */
             font-family: 'Press Start 2P', cursive;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; /* Keep background simple */
-             /* Disable anti-aliasing for sharper pixels */
+            background-color: #fce4ec; /* Light pink background like reference */
+            /* Disable anti-aliasing */
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
         }
 
         .calculator {
-            background-color: #59a7b8; /* Pastel blue body */
-            border: 4px solid #444; /* Thicker, darker border */
-            /* Remove border-radius for sharp corners */
-            border-radius: 8px; /* Slight radius for Game Boy feel, less than before */
-            padding: 15px; /* Slightly reduce padding */
-            width: 340px; /* Adjust width slightly if needed */
-            /* Hard shadow effect using box-shadow with no blur */
-            box-shadow: 4px 4px 0px #3b7b8a; /* Darker shade of body blue */
+            background-color: var(--gb-light-gray);
+            border: 5px solid var(--gb-black);
+            border-radius: 8px 8px 50px 8px; /* Classic bottom curve */
+            padding: 20px;
+            width: 320px; /* Adjusted width */
+            box-shadow: 10px 10px 0px var(--gb-hard-shadow);
+            position: relative; /* For positioning labels */
         }
 
         .screen-area {
-            background-color: #4b72a0; /* Darker pastel blue screen bezel */
-            border: 3px solid #444; /* Dark border */
-            border-radius: 4px; /* Minimal radius */
-            padding: 8px;
-            margin-bottom: 15px;
-            box-shadow: inset 2px 2px 0px #3a5a80; /* Inner shadow */
+            background-color: var(--gb-dark-gray);
+            border: 3px solid var(--gb-black);
+            border-radius: 6px 6px 20px 6px; /* Rounded bottom corners for screen bezel */
+            padding: 15px; /* Increased padding */
+            margin: 0 auto 15px auto; /* Center the screen area */
+            width: 85%; /* Make screen area slightly narrower than body */
+            box-shadow: inset 3px 3px 0px #555; /* Inner shadow */
         }
-
         .screen-header {
             display: flex;
             justify-content: space-between;
@@ -61,151 +71,244 @@
         }
 
         .screen {
-            background-color: #9badcc; /* Slightly desaturated blue for display */
-            border: 2px solid #444;
-            border-radius: 2px; /* Very sharp corners */
-            height: 60px;
+            background-color: var(--gb-screen-bg);
+            border: 2px solid var(--gb-black);
+            border-radius: 8px;
+            height: 50px; /* Slightly taller screen */
             display: flex;
             justify-content: flex-end;
             align-items: center;
             padding: 0 10px;
-            font-family: 'Press Start 2P', cursive; /* Ensure screen uses pixel font */
-            font-size: 20px; /* Adjust size for pixel font readability */
+            font-family: 'Press Start 2P', cursive;
+            font-size: 24px; /* Adjust size */
             overflow: hidden;
-            color: #222; /* Dark color for screen text */
-            box-shadow: inset 1px 1px 0px #798bb4; /* Subtle inner shadow */
-            letter-spacing: 2px; /* Space out digits */
+            color: var(--gb-screen-text);
+            box-shadow: inset 1px 1px 0px #8bac0f; /* Subtle inner green shadow */
+            letter-spacing: 1px;
         }
 
-        .controls {
+        .controls-area {
             display: flex;
+            /*justify-content: space-between;*/
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 0 5px; /* Add slight padding */
+            align-items: center; /* Align D-pad and A/B vertically */
+            margin-bottom: 25px; /* More space below controls */
+            padding: 0 10px; /* Padding for controls */
+        }
+
+        .dpad-container {
+            /* Container if needed for alignment */
         }
 
         .dpad {
-            display: grid; /* Use grid for easier pixel alignment */
-            grid-template-columns: repeat(3, 40px);
-            grid-template-rows: repeat(3, 40px);
-            gap: 2px; /* Small gap between buttons */
-            width: auto; /* Let grid define width */
-            /* align-items: center; no longer needed with grid */
+            display: grid;
+            grid-template-columns: repeat(3, 38px); /* Slightly smaller buttons */
+            grid-template-rows: repeat(3, 38px);
+            gap: 0px; /* No gap for connected look */
+            width: auto;
+            position: relative; /* Needed for the center overlay */
         }
-
-        /* Positioning D-pad buttons within the grid */
-        .dpad-btn-up { grid-column: 2; grid-row: 1; }
-        .dpad-btn-left { grid-column: 1; grid-row: 2; }
-        .dpad-btn-right { grid-column: 3; grid-row: 2; }
-        .dpad-btn-down { grid-column: 2; grid-row: 3; }
-        /* Placeholder for center - can be styled or left empty */
-        /* .dpad-center { grid-column: 2; grid-row: 2; background: #444; border-radius: 50%;} */
+         /* Style to make D-Pad look like one piece */
+         .dpad::before {
+             content: '';
+             position: relative;
+             width: 38  px;
+             height: 38px;
+             background: var(--gb-button-dpad); /* Cover the center */
+             top: 38px;
+             left: 38px;
+             z-index: 0;
+             border-top: 2px solid var(--gb-black);
+             border-bottom: 2px solid var(--gb-black);
+             box-sizing: border-box;
+         }
+          .dpad::after {
+             content: '';
+             position: absolute;
+             width: 38px;
+             height: 38px;
+            /* background: var(--gb-button-dpad); /* Cover the center */
+             top: 38px;
+             left: 38px;
+             z-index: 0;
+             border-left: 2px solid var(--gb-black);
+             border-right: 2px solid var(--gb-black);
+             box-sizing: border-box;
+         }
 
 
         .dpad-btn {
-            width: 40px; /* Fixed size */
-            height: 40px; /* Fixed size */
-            background-color: #4a4a4a; /* Darker grey buttons */
-            border: 2px solid #222; /* Very dark border */
-            border-radius: 3px; /* Slightly rounded square */
+            width: 38px;
+            height: 38px;
+            background-color: var(--gb-button-dpad);
+            border: 2px solid var(--gb-black);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            color: #d1c4e9; /* Pastel purple accents (arrows) */
-            font-family: sans-serif; /* Use simple symbols */
-            font-size: 20px;
+            color: var(--gb-light-gray); /* Arrow color */
+            font-family: sans-serif;
+            font-size: 24px;
             font-weight: bold;
-             box-shadow: 2px 2px 0px #2a2a2a; /* Hard shadow */
+            position: relative; /* Ensure buttons are above pseudo-elements */
+            z-index: 1;
+             box-shadow: 2px 2px 0px var(--gb-hard-shadow);
+             border-radius: 3px; /* Slight rounding */
+        }
+        /* Remove borders where buttons meet */
+        .dpad-btn-up { grid-column: 2; grid-row: 1; border-bottom: none; border-radius: 4px 4px 0 0;}
+        .dpad-btn-left { grid-column: 1; grid-row: 2; border-right: none; border-radius: 4px 0 0 4px;}
+        .dpad-btn-right { grid-column: 3; grid-row: 2; border-left: none; border-radius: 0 4px 4px 0;}
+        .dpad-btn-down { grid-column: 2; grid-row: 3; border-top: none; border-radius: 0 0 4px 4px;}
+
+        .action-buttons-container {
+             position: relative; /* For A/B labels */
+             display: flex;
+             align-items: center;
+             margin-right: 10px; /* Space from edge */
         }
 
         .action-buttons {
             display: flex;
-            align-items: center; /* Align vertically */
-            padding-top: 20px; /* Align roughly with dpad */
+            align-items: center;
         }
 
         .action-btn {
-            width: 55px; /* Slightly larger */
-            height: 55px;
-            border-radius: 50%; /* Keep original Game Boy round buttons */
-            border: 3px solid #444;
-            margin: 0 8px;
+            width: 50px; /* Slightly smaller A/B */
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--gb-black);
+            margin: 0 6px; /* Space between A/B */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Press Start 2P', cursive; /* Pixel font */
-            font-size: 14px; /* Adjust size */
+            font-family: 'Press Start 2P', cursive;
+            font-size: 18px; /* Larger text */
             cursor: pointer;
-             box-shadow: 2px 2px 0px #333; /* Hard shadow */
-             color: #333; /* Dark text on buttons */
-             padding-bottom: 4px; /* Adjust text position */
+            box-shadow: 3px 3px 0px var(--gb-hard-shadow);
+            color: var(--gb-black);
+            padding-bottom: 2px; /* Adjust text position */
+            background-color: var(--gb-button-red); /* Magenta */
         }
 
-        .clear-btn {
-            background-color: #ff8a80; /* Brighter Pastel red */
-        }
+        /* Labels for A/B buttons */
+         .ab-label {
+             position: absolute;
+             font-size: 12px;
+             color: var(--gb-button-red); /* Match button color */
+             bottom: -18px; /* Position below buttons */
+         }
+         .label-b {
+             left: 28px; /* Position B label */
+         }
+         .label-a {
+             right: 28px; /* Position A label */
+         }
 
-        .equals-btn {
-            background-color: #80cbc4; /* Tealish Pastel blue */
-        }
 
+        .keypad-area {
+             padding: 0 10px; /* Padding for keypad */
+             margin-bottom: 25px; /* Space below keypad */
+        }
 
         .keypad {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px; /* Slightly smaller gap */
+            gap: 8px;
         }
 
         .keypad-btn {
-            height: 45px; /* Slightly shorter */
-            border: 2px solid #444;
-            border-radius: 3px; /* Slightly rounded square */
+            height: 40px; /* Shorter keypad buttons */
+            border: 2px solid var(--gb-black);
+            border-radius: 4px; /* Slightly more rounded */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Press Start 2P', cursive; /* Pixel font */
-            font-size: 14px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px; /* Smaller font for keys */
             cursor: pointer;
-            box-shadow: 2px 2px 0px #333; /* Hard shadow */
-            color: #333; /* Dark text */
-            padding-bottom: 3px; /* Adjust text position */
+            box-shadow: 2px 2px 0px var(--gb-hard-shadow);
+            color: var(--gb-black);
+            padding-bottom: 3px;
+            background-color: var(--gb-button-keypad); /* Gray keypad */
         }
 
-        .number-btn {
-            background-color: #bcaae0; /* Adjusted Pastel purple */
-        }
-
-        .operator-btn {
-            background-color: #f4a8c1; /* Adjusted Pastel pink */
-        }
+        /* Maybe distinguish operator keys slightly if desired */
+        /* .operator-btn { background-color: #a0a0a0; } */
 
         .zero-btn {
             grid-column: span 2;
         }
 
+        .bottom-section {
+            display: flex;
+            justify-content: space-between; /* Space out start/select and speaker */
+            align-items: center;
+            padding: 0 15px; /* Indent bottom elements */
+            margin-top: 10  px; /* Adjust top margin */
+        }
+
+
         .bottom-buttons {
             display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 30px; /* Space between buttons */
+            gap: 20px; /* Space between start/select */
+            position: relative; /* For labels */
         }
 
         .bottom-btn {
-            width: 70px; /* Wider */
-            height: 18px;
-            background-color: #5a5a5a; /* Dark grey */
-            border: 2px solid #222;
-            border-radius: 10px; /* Keep these pill-shaped */
-            /* Remove rotation for blockier look */
-            /* transform: rotate(0); */
-             box-shadow: 2px 2px 0px #2a2a2a; /* Hard shadow */
+            width: 55px; /* Wider start/select */
+            height: 15px;
+            background-color: var(--gb-button-dpad);
+            border: 2px solid var(--gb-black);
+            border-radius: 10px; /* Pill shape */
+            box-shadow: 2px 2px 0px var(--gb-hard-shadow);
+        }
+         /* Labels for Start/Select */
+         .start-select-label {
+             position: absolute;
+             font-size: 8px;
+             color: var(--gb-black);
+             top: -15px; /* Position above buttons */
+             text-transform: uppercase;
+         }
+         .label-select {
+             left: 4px;
+         }
+         .label-start {
+             right: 8px;
+         }
+
+
+        .speaker-grill {
+            display: flex;
+            flex-direction: column;
+            gap: 3px; /* Space between lines */
+            transform: rotate(-30deg); /* Angle the speaker lines */
+            width: 50px; /* Width of the grill area */
         }
 
-        /* Button press effects - translate down/right and remove shadow */
+        .speaker-line {
+            height: 3px; /* Thickness of lines */
+            background-color: var(--gb-dark-gray); /* Match dark gray accents */
+            border-radius: 3px;
+            box-shadow: 2px 2px 0px var(--gb-hard-shadow);
+        }
+         .speaker-line:nth-child(1) { width: 80%; margin-left: 10%;}
+         .speaker-line:nth-child(2) { width: 100%; }
+         .speaker-line:nth-child(3) { width: 100%; }
+         .speaker-line:nth-child(4) { width: 100%; }
+         .speaker-line:nth-child(5) { width: 80%; margin-left: 10%;}
+
+
+        /* Button press effects */
         .dpad-btn:active, .action-btn:active, .keypad-btn:active, .bottom-btn:active {
             transform: translate(2px, 2px);
-            box-shadow: none; /* Remove shadow when pressed */
+            box-shadow: none;
+        }
+        /* Keyboard press feedback */
+        .active-key {
+            transform: translate(2px, 2px);
+            box-shadow: none !important;
         }
     </style>
 </head>
@@ -221,60 +324,81 @@
         </div>
 
         <!-- Controls area -->
-        <div class="controls">
-            <!-- D-pad (decorative but styled) -->
-            <div class="dpad">
-                 <!-- Using grid layout classes -->
-                <div class="dpad-btn dpad-btn-up">▲</div>
-                <div class="dpad-btn dpad-btn-left">◀</div>
-                <!-- <div class="dpad-center"></div> Optional center piece -->
-                <div class="dpad-btn dpad-btn-right">▶</div>
-                <div class="dpad-btn dpad-btn-down">▼</div>
+        <div class="controls-area">
+            <!-- D-pad -->
+            <div class="dpad-container">
+                <div class="dpad">
+                    <div class="dpad-btn dpad-btn-up">▲</div>
+                    <div class="dpad-btn dpad-btn-left">◀</div>
+                    <!-- Center covered by pseudo-elements -->
+                    <div class="dpad-btn dpad-btn-right">▶</div>
+                    <div class="dpad-btn dpad-btn-down">▼</div>
+                </div>
             </div>
 
-            <!-- A/B buttons (functional) -->
-            <div class="action-buttons">
-                 <!-- Text adjusted for pixel font -->
-                <div class="action-btn clear-btn" id="clear">CLR</div>
-                <div class="action-btn equals-btn" id="equals">=</div>
+            <!-- A/B buttons -->
+            <div class="action-buttons-container">
+                <div class="action-buttons">
+                     <!-- Use C for Clear (B), = for Equals (A) -->
+                    <div class="action-btn clear-btn" id="clear">C</div>
+                    <div class="action-btn equals-btn" id="equals">=</div>
+                </div>
+                 <!-- Decorative A/B labels -->
+                 <div class="ab-label label-b">B</div>
+                 <div class="ab-label label-a">A</div>
             </div>
         </div>
 
-        <!-- Keypad -->
-        <div class="keypad">
-            <div class="keypad-btn number-btn" data-value="7">7</div>
-            <div class="keypad-btn number-btn" data-value="8">8</div>
-            <div class="keypad-btn number-btn" data-value="9">9</div>
-            <div class="keypad-btn operator-btn" data-value="/">/</div> <!-- Simpler symbol -->
+        <!-- Keypad Area -->
+        <div class="keypad-area">
+            <div class="keypad">
+                <div class="keypad-btn number-btn" data-value="7">7</div>
+                <div class="keypad-btn number-btn" data-value="8">8</div>
+                <div class="keypad-btn number-btn" data-value="9">9</div>
+                <div class="keypad-btn operator-btn" data-value="/">/</div>
 
-            <div class="keypad-btn number-btn" data-value="4">4</div>
-            <div class="keypad-btn number-btn" data-value="5">5</div>
-            <div class="keypad-btn number-btn" data-value="6">6</div>
-            <div class="keypad-btn operator-btn" data-value="*">*</div> <!-- Simpler symbol -->
+                <div class="keypad-btn number-btn" data-value="4">4</div>
+                <div class="keypad-btn number-btn" data-value="5">5</div>
+                <div class="keypad-btn number-btn" data-value="6">6</div>
+                <div class="keypad-btn operator-btn" data-value="*">*</div>
 
-            <div class="keypad-btn number-btn" data-value="1">1</div>
-            <div class="keypad-btn number-btn" data-value="2">2</div>
-            <div class="keypad-btn number-btn" data-value="3">3</div>
-            <div class="keypad-btn operator-btn" data-value="-">-</div> <!-- Simpler symbol -->
+                <div class="keypad-btn number-btn" data-value="1">1</div>
+                <div class="keypad-btn number-btn" data-value="2">2</div>
+                <div class="keypad-btn number-btn" data-value="3">3</div>
+                <div class="keypad-btn operator-btn" data-value="-">-</div>
 
-            <div class="keypad-btn number-btn zero-btn" data-value="0">0</div>
-            <div class="keypad-btn number-btn" data-value=".">.</div>
-            <div class="keypad-btn operator-btn" data-value="+">+</div>
+                <div class="keypad-btn number-btn zero-btn" data-value="0">0</div>
+                <div class="keypad-btn number-btn" data-value=".">.</div>
+                <div class="keypad-btn operator-btn" data-value="+">+</div>
+            </div>
         </div>
 
-        <!-- Start/Select buttons (decorative) -->
-        <div class="bottom-buttons">
-            <div class="bottom-btn select-btn"></div> <!-- Removed rotation classes -->
-            <div class="bottom-btn start-btn"></div>
-        </div>
+         <!-- Bottom Section: Start/Select and Speaker -->
+         <div class="bottom-section">
+             <div class="bottom-buttons">
+                  <span class="start-select-label label-select">Select</span>
+                  <span class="start-select-label label-start">Start</span>
+                 <div class="bottom-btn select-btn"></div>
+                 <div class="bottom-btn start-btn"></div>
+             </div>
+             <div class="speaker-grill">
+                 <div class="speaker-line"></div>
+                 <div class="speaker-line"></div>
+                 <div class="speaker-line"></div>
+                 <div class="speaker-line"></div>
+                 <div class="speaker-line"></div>
+             </div>
+         </div>
+
     </div>
 
     <script>
-        // JavaScript remains the same as it handles logic, not presentation
+        // JavaScript remains largely the same - ensure selectors match if IDs changed
+        // Added comments for clarity on button mapping
         document.addEventListener('DOMContentLoaded', function() {
             const display = document.getElementById('display');
-            const clearBtn = document.getElementById('clear');
-            const equalsBtn = document.getElementById('equals');
+            const clearBtn = document.getElementById('clear'); // Mapped to B-style button
+            const equalsBtn = document.getElementById('equals'); // Mapped to A-style button
             const numberBtns = document.querySelectorAll('.number-btn');
             const operatorBtns = document.querySelectorAll('.operator-btn');
 
@@ -282,63 +406,79 @@
             let firstOperand = null;
             let operator = null;
             let waitingForSecondOperand = false;
-            const maxDisplayLength = 9; // Limit for pixel screen
+            const maxDisplayLength = 8; // Adjusted for potentially smaller screen/font
 
-            // Update display
             function updateDisplay() {
                 let displayValue = currentInput;
-                // Handle potential exponential notation from calculations
-                if (displayValue.includes('e')) {
-                   displayValue = parseFloat(displayValue).toPrecision(maxDisplayLength - 2);
+                if (displayValue === 'Error') {
+                    // Keep Error message short
+                } else if (displayValue.includes('e')) {
+                   displayValue = parseFloat(displayValue).toPrecision(maxDisplayLength - 2); // Adjust precision for 'e'
                 }
-                // Truncate if too long
+
+                 // Ensure it fits, prioritizing significant digits for results
                  if (displayValue.length > maxDisplayLength) {
-                    // Try to keep significant digits if it's a result
-                    if (waitingForSecondOperand && firstOperand !== null) {
-                         displayValue = parseFloat(displayValue).toPrecision(maxDisplayLength);
-                         // Final check after precision formatting
-                         if (displayValue.length > maxDisplayLength) {
-                           displayValue = displayValue.substring(0, maxDisplayLength);
-                         }
+                    const numValue = parseFloat(displayValue);
+                    if (!isNaN(numValue)) {
+                       displayValue = numValue.toPrecision(maxDisplayLength);
+                       // Final check after precision
+                        if (displayValue.length > maxDisplayLength) {
+                             // If still too long (e.g., very large number), use exponential
+                             displayValue = numValue.toExponential(maxDisplayLength - 4); // e.g., 1.23e+9
+                             if(displayValue.length > maxDisplayLength) { // Failsafe truncate
+                                displayValue = displayValue.substring(0, maxDisplayLength);
+                             }
+                        }
                     } else {
-                        // If typing, just cut off
+                        // Not a number (rare case), just truncate
                         displayValue = displayValue.substring(0, maxDisplayLength);
                     }
                  }
-                 // Update internal state only with valid numbers or '0'
-                 if (!isNaN(parseFloat(displayValue)) || displayValue === '0' || displayValue === '0.'){
-                    currentInput = displayValue;
+
+                 // Update internal state only if it's a valid representation or Error
+                 if (!isNaN(parseFloat(displayValue)) || displayValue === '0' || displayValue === '0.' || displayValue.includes('e') || displayValue === 'Error'){
+                    // Update internal only if it wasn't truncated into non-parsable state
+                    if (displayValue !== 'Error' && (isNaN(parseFloat(displayValue)) && !displayValue.includes('e') && displayValue !== '0.' && displayValue !== '0')) {
+                        // If display value became invalid after formatting, keep old currentInput
+                        // This prevents issues if formatting created something unusable like "1.23e+"
+                        displayValue = currentInput; // Revert display value for this update
+                    } else {
+                         currentInput = displayValue; // Update internal state
+                    }
                  } else if (currentInput.length > maxDisplayLength) {
-                     // If truncation resulted in NaN prevent it from breaking things
+                     // If truncation resulted in something unusable, revert
                      currentInput = currentInput.substring(0, maxDisplayLength);
                      displayValue = currentInput;
                  }
 
-
                 display.textContent = displayValue;
             }
 
-            // Handle digit input
+
             function inputDigit(digit) {
-                 if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return; // Prevent overflow
+                if (currentInput === 'Error') {
+                   resetCalculator();
+                }
+                 if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return;
 
                 if (waitingForSecondOperand) {
                     currentInput = digit;
                     waitingForSecondOperand = false;
                 } else {
-                    // Prevent leading zeros like 00, 05 etc.
-                    if (currentInput === '0') {
-                        currentInput = digit;
-                    } else {
-                         currentInput += digit;
+                    if (currentInput === '0' && digit !== '0') { // Allow starting with 0. but not 00
+                         currentInput = digit;
+                     } else if (currentInput !== '0') {
+                        currentInput += digit;
                     }
                 }
                 updateDisplay();
             }
 
-            // Handle decimal point
             function inputDecimal() {
-                if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return; // Prevent overflow
+                 if (currentInput === 'Error') {
+                    resetCalculator();
+                 }
+                if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return;
 
                 if (waitingForSecondOperand) {
                     currentInput = '0.';
@@ -353,81 +493,69 @@
                 }
             }
 
-            // Handle operators
             function handleOperator(nextOperator) {
+                if (currentInput === 'Error') return;
                 const inputValue = parseFloat(currentInput);
 
-                 // Allow changing operator if waiting for second operand
                  if (operator && waitingForSecondOperand) {
-                     operator = nextOperator;
+                     operator = nextOperator; // Change operator if pressed consecutively
                      return;
                  }
 
-                if (firstOperand === null && !isNaN(inputValue)) {
-                    firstOperand = inputValue;
-                } else if (operator) {
-                    const result = performCalculation();
+                // Calculate if there's a pending operation
+                 if (firstOperand !== null && operator && !waitingForSecondOperand) {
+                     const result = performCalculation();
                      if (result === 'Error') {
                          currentInput = 'Error';
+                         updateDisplay();
                          resetCalculatorStateOnError();
+                         return; // Stop processing on error
                      } else {
                          currentInput = String(result);
-                         firstOperand = result; // Chain calculation
+                         firstOperand = result;
+                         updateDisplay(); // Show intermediate result
                      }
-                    updateDisplay(); // Show intermediate result
-                 } else {
-                     // Handle case where operator is pressed after equals or clear without new number
+                 } else if (!isNaN(inputValue)){
+                     // Store the first operand if none exists
                      firstOperand = inputValue;
                  }
+
 
                 waitingForSecondOperand = true;
                 operator = nextOperator;
             }
 
-             // Perform calculation
              function performCalculation() {
-                 if (operator === null || waitingForSecondOperand) return parseFloat(currentInput); // Should not calculate if waiting or no op
+                 if (operator === null || firstOperand === null) return parseFloat(currentInput); // Nothing to calculate
 
+                 // If waiting for second operand but equals is hit, use current input as second op
                  const secondOperand = parseFloat(currentInput);
 
-                 if (isNaN(firstOperand) || isNaN(secondOperand)) return 'Error'; // Check for invalid numbers
+                 if (isNaN(firstOperand) || isNaN(secondOperand)) {
+                     console.error("Calculation error: Operands are NaN", firstOperand, secondOperand);
+                     return 'Error';
+                 }
 
                  let result;
 
                  switch (operator) {
-                     case '+':
-                         result = firstOperand + secondOperand;
-                         break;
-                     case '-':
-                         result = firstOperand - secondOperand;
-                         break;
-                     case '*':
-                         result = firstOperand * secondOperand;
-                         break;
+                     case '+': result = firstOperand + secondOperand; break;
+                     case '-': result = firstOperand - secondOperand; break;
+                     case '*': result = firstOperand * secondOperand; break;
                      case '/':
-                         if (secondOperand === 0) {
-                             return 'Error'; // Division by zero
-                         }
+                         if (secondOperand === 0) return 'Error';
                          result = firstOperand / secondOperand;
                          break;
-                     default:
-                         return secondOperand; // Should not happen with valid operator
+                     default: return secondOperand; // Should not happen
                  }
 
-                 // Check for results too large or small for display
-                 if (!isFinite(result)) {
-                     return 'Error';
-                 }
+                 if (!isFinite(result)) return 'Error'; // Handle Infinity/-Infinity
 
-                 // Basic rounding to avoid long decimals - adjust precision as needed
-                 // Use Number() to potentially remove trailing zeros after toFixed
-                 // return Number(result.toFixed(6));
-                 // Let's use precision to fit screen better
-                 return parseFloat(result.toPrecision(maxDisplayLength));
-
+                  // Rounding/Precision is handled by updateDisplay to fit the screen
+                  // Return the raw result here
+                  return result;
              }
 
-            // Clear calculator
             function resetCalculator() {
                 currentInput = '0';
                 firstOperand = null;
@@ -436,38 +564,29 @@
                 updateDisplay();
             }
 
-             // Reset state after error display
              function resetCalculatorStateOnError() {
                  firstOperand = null;
                  operator = null;
                  waitingForSecondOperand = false;
-                 // Keep 'Error' on display until next input or clear
              }
 
-            // Event listeners for buttons
+            // --- Event Listeners ---
             numberBtns.forEach(button => {
                 button.addEventListener('click', () => {
-                    if (display.textContent === 'Error') {
-                        resetCalculator(); // Clear error on next number input
-                    }
                     const value = button.getAttribute('data-value');
-                    if (value === '.') {
-                        inputDecimal();
-                    } else {
-                        inputDigit(value);
-                    }
+                    if (value === '.') { inputDecimal(); }
+                    else { inputDigit(value); }
                 });
             });
 
             operatorBtns.forEach(button => {
                 button.addEventListener('click', () => {
-                     if (display.textContent === 'Error') return; // Don't allow ops after error
                     handleOperator(button.getAttribute('data-value'));
                 });
             });
 
-            equalsBtn.addEventListener('click', () => {
-                if (display.textContent === 'Error' || !operator || waitingForSecondOperand) return; // Don't calculate after error or without full expression
+            equalsBtn.addEventListener('click', () => { // A-style button
+                if (currentInput === 'Error' || operator === null || firstOperand === null) return;
 
                 const result = performCalculation();
                  if (result === 'Error') {
@@ -475,112 +594,76 @@
                      resetCalculatorStateOnError();
                  } else {
                      currentInput = String(result);
-                     // After equals, the result becomes the potential first operand for a new calculation
-                     firstOperand = result; // Store result
-                     operator = null; // Ready for new calculation sequence
-                     waitingForSecondOperand = true; // Allow starting new number or op immediately
+                     firstOperand = null; // Calculation complete, reset firstOperand
+                     operator = null; // Reset operator
+                     waitingForSecondOperand = false; // Ready for new input
                  }
-                updateDisplay();
-                // After calculation, effectively wait for the next number or operator
-                // Setting waitingForSecondOperand = true allows overwriting the result display with new input
+                 updateDisplay();
             });
 
+            clearBtn.addEventListener('click', resetCalculator); // B-style button
 
-             clearBtn.addEventListener('click', () => {
-                 resetCalculator();
-                 // If CLR is hit after an error, ensure display is cleared too
-                 if (display.textContent === 'Error') {
-                     display.textContent = '0';
-                 }
-             });
-
-            // Keyboard support
+            // --- Keyboard Support ---
             document.addEventListener('keydown', event => {
                 let handled = false;
-                 const key = event.key;
+                const key = event.key;
 
-                 // Handle error state
-                 if (display.textContent === 'Error') {
+                 // Handle based on current state
+                 if (currentInput === 'Error') {
                      if (key === 'Escape' || key.toLowerCase() === 'c') {
-                         resetCalculator();
-                         handled = true;
-                     } else if (/^\d$/.test(key) || key === '.') {
-                          resetCalculator(); // Clear error before processing new input
-                          // Allow event processing to continue below
+                         resetCalculator(); handled = true;
+                     } else if (/^\d|\./.test(key)) {
+                         resetCalculator(); // Clear error before processing new input
+                         // Let inputDigit/inputDecimal handle the key now
                      } else {
-                         handled = true; // Ignore other keys after error
+                         handled = true; // Ignore other keys
                      }
-                      if (handled) {
-                          event.preventDefault();
-                          return;
-                      }
                  }
 
-
-                // Numbers 0-9
-                if (/^\d$/.test(key)) {
-                    inputDigit(key);
-                    handled = true;
-                }
-                // Decimal point
-                else if (key === '.') {
-                    inputDecimal();
-                    handled = true;
-                }
-                // Operators
-                else if (/^[+\-*/]$/.test(key)) {
-                    handleOperator(key);
-                    handled = true;
-                }
-                // Enter/= for equals
-                else if (key === 'Enter' || key === '=') {
-                    // Simulate click to use the existing robust logic
-                    equalsBtn.click();
-                    handled = true;
-                }
-                // Escape/c for clear
-                else if (key === 'Escape' || key.toLowerCase() === 'c') {
-                    // Simulate click
-                     clearBtn.click();
-                    handled = true;
-                }
-                 // Backspace for correction (optional)
-                 else if (key === 'Backspace') {
-                     if (!waitingForSecondOperand && currentInput !== '0' && currentInput !== 'Error') {
-                         currentInput = currentInput.slice(0, -1);
-                         if (currentInput === '') {
-                             currentInput = '0';
+                 if (!handled) {
+                    if (/^\d$/.test(key)) { inputDigit(key); handled = true; }
+                    else if (key === '.') { inputDecimal(); handled = true; }
+                    else if (/^[+\-*/]$/.test(key)) { handleOperator(key); handled = true; }
+                    else if (key === 'Enter' || key === '=') { equalsBtn.click(); handled = true; }
+                    else if (key === 'Escape' || key.toLowerCase() === 'c') { clearBtn.click(); handled = true; }
+                    else if (key === 'Backspace') {
+                         if (!waitingForSecondOperand && currentInput !== '0' && currentInput !== 'Error') {
+                             currentInput = currentInput.slice(0, -1);
+                             if (currentInput === '') currentInput = '0';
+                             updateDisplay();
+                             handled = true;
                          }
-                         updateDisplay();
-                         handled = true;
                      }
                  }
+
 
                 if (handled) {
-                    event.preventDefault(); // Prevent default browser actions if we handled the key
-                     // Trigger :active style for keyboard input
-                     const button = findButtonForKey(key);
-                     if (button) {
-                         button.classList.add('active-key');
-                         setTimeout(() => button.classList.remove('active-key'), 100); // Visual feedback
-                     }
-                 }
-             });
+                    event.preventDefault();
+                    const button = findButtonForKey(key);
+                    if (button) {
+                        button.classList.add('active-key');
+                        setTimeout(() => button.classList.remove('active-key'), 100);
+                    }
+                }
+            });
 
-             // Helper to find button associated with key for visual feedback
              function findButtonForKey(key) {
                  if (/^\d|\./.test(key)) return document.querySelector(`.keypad-btn[data-value="${key}"]`);
                  if (/^[+\-*/]$/.test(key)) return document.querySelector(`.keypad-btn[data-value="${key}"]`);
                  if (key === 'Enter' || key === '=') return equalsBtn;
                  if (key === 'Escape' || key.toLowerCase() === 'c') return clearBtn;
+                 if (key === 'Backspace') return null; // Or maybe map to clear?
                  return null;
              }
-            // Add CSS for keyboard active state feedback
-             const styleSheet = document.createElement("style");
-             styleSheet.type = "text/css";
-             styleSheet.innerText = `.active-key { transform: translate(2px, 2px); box-shadow: none !important; }`; // Mimic :active style
-             document.head.appendChild(styleSheet);
-
+             // Ensure active-key style exists
+             const styleSheetExists = Array.from(document.head.querySelectorAll('style')).some(s => s.id === 'active-key-style');
+             if (!styleSheetExists) {
+                 const styleSheet = document.createElement("style");
+                 styleSheet.id = 'active-key-style';
+                 styleSheet.type = "text/css";
+                 styleSheet.innerText = `.active-key { transform: translate(2px, 2px); box-shadow: none !important; }`;
+                 document.head.appendChild(styleSheet);
+            }
 
             // Initial display update
             updateDisplay();
