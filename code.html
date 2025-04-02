@@ -8,17 +8,17 @@
         /* Import Pixel Font */
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-        /* Color Palette - Game Boy DMG Inspired */
+        /* Color Palette - Game Boy DMG Inspired (FROM YOUR LAST FILE) */
         :root {
-            --gb-light-gray: #FFBC42;
-            --gb-dark-gray: #252627;
-            --gb-black: #FFF9FB;
-            --gb-screen-bg: #549aa5;
+            --gb-light-gray: #EFD0CA;
+            --gb-dark-gray: #214E34;
+            --gb-black: #C1BCAC;
+            --gb-screen-bg: #3c676e;
             --gb-screen-text: #17226b;
             --gb-button-red: #BB0A21;
-            --gb-button-dpad: #252627;
-            --gb-button-keypad: #252627;
-            --gb-hard-shadow:#ce9834;
+            --gb-button-dpad: #214E34;
+            --gb-button-keypad: #214E34;
+            --gb-hard-shadow:#979B8D;
         }
 
         body {
@@ -28,7 +28,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #547AA5; /* Light pink background */
+            background-color: #5C7457; /* Background from your last file */
             image-rendering: pixelated; /* Disable image smoothing */
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
@@ -36,49 +36,59 @@
             position: relative; /* Required for absolute positioning of bubbles */
         }
 
-        /* Bubble animation styles */
-        @keyframes float-up {
+        /* --- MODIFIED BUBBLE ANIMATION --- */
+        /* Keyframes for organic floating with customizable drift/rotation */
+        @keyframes organic-float {
             0% {
-                transform: translateY(100vh) scale(0.5); /* Start from bottom, smaller */
-                opacity: 0;
+                transform: translateY(0vh) translateX(0px) rotate(0deg) scale(1);
+                opacity: 0; /* Start invisible */
             }
             10% {
-                opacity: 0.7; /* Fade in quickly */
+                 /* Use opacity variable set by JS */
+                opacity: var(--bubble-opacity);
             }
-            90% {
-                opacity: 0.5; /* Maintain opacity for most of animation */
+            25% {
+                /* Drift sideways using variable 1 */
+                transform: translateY(-25vh) translateX(var(--horizontal-drift-1)) rotate(calc(var(--rotation-amount) * 0.3)) scale(var(--scale-factor));
+            }
+            50% {
+                 /* Drift back or further using variable 2 */
+                transform: translateY(-50vh) translateX(var(--horizontal-drift-2)) rotate(calc(var(--rotation-amount) * 0.6)) scale(1); /* Reset scale */
+            }
+             75% {
+                 /* Drift again using variable 1 (or a mix) */
+                 transform: translateY(-75vh) translateX(calc(var(--horizontal-drift-1) * 0.5)) rotate(calc(var(--rotation-amount) * 0.8)) scale(var(--scale-factor));
+             }
+            95% {
+                 /* Fade out near the top */
+                opacity: calc(var(--bubble-opacity) * 0.5);
             }
             100% {
-                transform: translateY(-100vh) scale(1.2); /* Float above screen, larger */
-                opacity: 0; /* Fade out at top */
+                /* Ensure it goes well off screen */
+                transform: translateY(-110vh) translateX(0px) rotate(var(--rotation-amount)) scale(1);
+                opacity: 0; /* Fully faded out */
             }
         }
 
         .bubble {
             position: absolute;
-            animation-delay: 50ms;
             border-radius: 50%;
-            background: rgba(72, 210, 228, 0.908); /* Default white with transparency */
-            animation: float-up linear infinite;
+            /* background, filter, width, height, left, bottom set by JS */
+            /* Use the new animation name */
+            animation-name: organic-float;
+            /* animation-duration, animation-delay set by JS */
+            animation-timing-function: linear; /* Smooth, continuous pace */
+            animation-iteration-count: infinite;
             z-index: 1; /* Behind calculator */
-            filter: blur(1px); /* Subtle blur for softer look */
             pointer-events: none; /* Bubbles should not interact with mouse */
-            transform-style: preserve-3d; /* Enable 3D transforms */
+            /* Removed transform-style and ::after logic for simplicity */
+            will-change: transform, opacity; /* Hint browser for optimization */
         }
-        
-        /* Add this new class variation */
-        .bubble::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: inherit;
-            transform: translateZ(-10px); /* Push some bubbles "back" */
-            opacity: 0.7;
-            filter: blur(2px);
-        }
+        /* Removed the .bubble::after rule */
+        /* Removed extra closing brace */
 
+
+        /* --- UNCHANGED CALCULATOR STYLES (From your last file) --- */
         .calculator {
             background-color: var(--gb-light-gray);
             border: 2px solid var(--gb-black);
@@ -103,7 +113,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
-            color: #FFF9FB;
+            color: #C1BCAC;
             font-size: 9px;
             letter-spacing: 1px;
             padding: 0 2px;
@@ -122,7 +132,7 @@
             font-size: 24px;
             overflow: hidden;
             color: var(--gb-screen-text);
-            box-shadow: inset 1px 1px 0px #8bac0f;
+            box-shadow: inset 1px 1px 0px #5C7457;
             letter-spacing: 1px;
         }
 
@@ -134,17 +144,14 @@
             padding: 0 10px;
         }
 
-        .dpad-container {}
-
         .dpad {
             display: grid;
             grid-template-columns: repeat(3, 38px);
             grid-template-rows: repeat(3, 38px);
-            gap: 1px;
+            gap: 1px; /* Kept gap as per your last file */
             width: auto;
             position: relative;
         }
-         /* Style D-Pad as one piece */
          .dpad::before, .dpad::after {
              content: '';
              position: absolute;
@@ -155,16 +162,12 @@
              left: 38px;
              z-index: 0;
              box-sizing: border-box;
-         }
-          .dpad::before {
+             /* Kept 0px borders as per your last file */
              border-top: 0px solid var(--gb-black);
              border-bottom: 0px solid var(--gb-black);
-         }
-          .dpad::after {
              border-left: 0px solid var(--gb-black);
              border-right: 0px solid var(--gb-black);
          }
-
 
         .dpad-btn {
             width: 38px;
@@ -175,20 +178,20 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            color: #FFF9FB;
+            color: #C1BCAC;
             font-family: sans-serif;
             font-size: 24px;
             font-weight: bold;
             position: relative;
-            z-index: 2;
+            z-index: 2; /* Kept z-index as per your last file */
             box-shadow: 2px 2px 0px var(--gb-hard-shadow);
-            border-radius: 3px;
+            border-radius: 3px; /* Kept simple radius as per your last file */
         }
-        /* Remove borders where D-pad buttons meet */
-        .dpad-btn-up { grid-column: 2; grid-row: 1; border-bottom: 3; border-radius: 10px 10px 10px 10px;}
-        .dpad-btn-left { grid-column: 1; grid-row: 2; border-right: 3; border-radius: 10px 10px 10px 10px;}
-        .dpad-btn-right { grid-column: 3; grid-row: 2; border-left: 3; border-radius: 10px 10px 10px 10px;}
-        .dpad-btn-down { grid-column: 2; grid-row: 3; border-top: 3; border-radius: 10px 10px 10px 10px;}
+         /* Kept rounded corners as per your last file */
+        .dpad-btn-up { grid-column: 2; grid-row: 1; border-radius: 10px 10px 10px 10px;}
+        .dpad-btn-left { grid-column: 1; grid-row: 2; border-radius: 10px 10px 10px 10px;}
+        .dpad-btn-right { grid-column: 3; grid-row: 2; border-radius: 10px 10px 10px 10px;}
+        .dpad-btn-down { grid-column: 2; grid-row: 3; border-radius: 10px 10px 10px 10px;}
 
         .action-buttons-container {
              position: relative;
@@ -220,19 +223,14 @@
             background-color: var(--gb-button-red);
         }
 
-        /* Labels for A/B buttons */
          .ab-label {
              position: absolute;
              font-size: 12px;
              color: var(--gb-button-red);
              bottom: -22px;
          }
-         .label-b {
-             left: 28px;
-         }
-         .label-a {
-             right: 28px;
-         }
+         .label-b { left: 28px; }
+         .label-a { right: 28px; }
 
 
         .keypad-area {
@@ -263,19 +261,15 @@
         }
 
         .operator-btn { background-color: #BB0A21; }
-
-        .zero-btn {
-            grid-column: span 2;
-        }
+        .zero-btn { grid-column: span 2; }
 
         .bottom-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 15px;
-            margin-top: 10  px;
+            margin-top: 10px;
         }
-
 
         .bottom-buttons {
             display: flex;
@@ -291,21 +285,15 @@
             border-radius: 10px;
             box-shadow: 2px 2px 0px var(--gb-hard-shadow);
         }
-         /* Labels for Start/Select */
          .start-select-label {
              position: absolute;
              font-size: 8px;
-             color: var(--gb-black);
+             color: var(--gb-button-keypad);
              top: -15px;
              text-transform: uppercase;
          }
-         .label-select {
-             left: 4px;
-         }
-         .label-start {
-             right: 8px;
-         }
-
+         .label-select { left: 4px; }
+         .label-start { right: 8px; }
 
         .speaker-grill {
             display: flex;
@@ -314,7 +302,6 @@
             transform: rotate(-30deg);
             width: 50px;
         }
-
         .speaker-line {
             height: 3px;
             background-color: var(--gb-dark-gray);
@@ -327,23 +314,22 @@
          .speaker-line:nth-child(4) { width: 100%; }
          .speaker-line:nth-child(5) { width: 80%; margin-left: 10%;}
 
-
-        /* Button press effects */
         .dpad-btn:active, .action-btn:active, .keypad-btn:active, .bottom-btn:active {
             transform: translate(2px, 2px);
             box-shadow: none;
         }
-        /* Keyboard press feedback */
         .active-key {
             transform: translate(2px, 2px);
             box-shadow: none !important;
         }
+        /* --- END UNCHANGED CALCULATOR STYLES --- */
+
     </style>
 </head>
 <body>
 
     <div class="calculator">
-        <!-- Screen area -->
+        <!-- Calculator HTML remains exactly as you provided -->
         <div class="screen-area">
             <div class="screen-header">
                 <span class="screen-label">CALC</span>
@@ -351,10 +337,7 @@
             </div>
             <div class="screen" id="display">0</div>
         </div>
-
-        <!-- Controls area -->
         <div class="controls-area">
-            <!-- D-pad -->
             <div class="dpad-container">
                 <div class="dpad">
                     <div class="dpad-btn dpad-btn-up">▲</div>
@@ -363,45 +346,34 @@
                     <div class="dpad-btn dpad-btn-down">▼</div>
                 </div>
             </div>
-
-            <!-- A/B buttons -->
             <div class="action-buttons-container">
                 <div class="action-buttons">
-                     <!-- C for Clear (B), = for Equals (A) -->
                     <div class="action-btn clear-btn" id="clear">C</div>
                     <div class="action-btn equals-btn" id="equals">=</div>
                 </div>
-                 <!-- Decorative A/B labels -->
                  <div class="ab-label label-b">B</div>
                  <div class="ab-label label-a">A</div>
             </div>
         </div>
-
-        <!-- Keypad Area -->
         <div class="keypad-area">
             <div class="keypad">
                 <div class="keypad-btn number-btn" data-value="7">7</div>
                 <div class="keypad-btn number-btn" data-value="8">8</div>
                 <div class="keypad-btn number-btn" data-value="9">9</div>
                 <div class="keypad-btn operator-btn" data-value="/">/</div>
-
                 <div class="keypad-btn number-btn" data-value="4">4</div>
                 <div class="keypad-btn number-btn" data-value="5">5</div>
                 <div class="keypad-btn number-btn" data-value="6">6</div>
                 <div class="keypad-btn operator-btn" data-value="*">*</div>
-
                 <div class="keypad-btn number-btn" data-value="1">1</div>
                 <div class="keypad-btn number-btn" data-value="2">2</div>
                 <div class="keypad-btn number-btn" data-value="3">3</div>
                 <div class="keypad-btn operator-btn" data-value="-">-</div>
-
                 <div class="keypad-btn number-btn zero-btn" data-value="0">0</div>
                 <div class="keypad-btn number-btn" data-value=".">.</div>
                 <div class="keypad-btn operator-btn" data-value="+">+</div>
             </div>
         </div>
-
-         <!-- Bottom Section: Start/Select and Speaker -->
          <div class="bottom-section">
              <div class="bottom-buttons">
                   <span class="start-select-label label-select">Select</span>
@@ -417,342 +389,198 @@
                  <div class="speaker-line"></div>
              </div>
          </div>
-
     </div>
 
     <script>
         // JavaScript for calculator functionality and bubble animation
         document.addEventListener('DOMContentLoaded', function() {
-            // Calculator Display and Buttons
+            // --- UNCHANGED CALCULATOR JS ---
             const display = document.getElementById('display');
             const clearBtn = document.getElementById('clear');
             const equalsBtn = document.getElementById('equals');
             const numberBtns = document.querySelectorAll('.number-btn');
             const operatorBtns = document.querySelectorAll('.operator-btn');
-
-            // Calculator State Variables
             let currentInput = '0';
             let firstOperand = null;
             let operator = null;
             let waitingForSecondOperand = false;
             const maxDisplayLength = 8;
-
-            // Function to update the calculator display
             function updateDisplay() {
                 let displayValue = currentInput;
-                if (displayValue === 'Error') {
-                    // Keep Error message short
-                } else if (displayValue.includes('e')) {
-                   displayValue = parseFloat(displayValue).toPrecision(maxDisplayLength - 2);
-                }
-
-
-                 if (displayValue.length > maxDisplayLength) {
+                if (displayValue === 'Error') {} else if (displayValue.includes('e')) { displayValue = parseFloat(displayValue).toPrecision(maxDisplayLength - 2); }
+                if (displayValue.length > maxDisplayLength) {
                     const numValue = parseFloat(displayValue);
                     if (!isNaN(numValue)) {
-                       displayValue = numValue.toPrecision(maxDisplayLength);
+                        displayValue = numValue.toPrecision(maxDisplayLength);
                         if (displayValue.length > maxDisplayLength) {
-                             displayValue = numValue.toExponential(maxDisplayLength - 4);
-                             if(displayValue.length > maxDisplayLength) {
-                                displayValue = displayValue.substring(0, maxDisplayLength);
-                             }
+                            displayValue = numValue.toExponential(maxDisplayLength - 4);
+                            if(displayValue.length > maxDisplayLength) { displayValue = displayValue.substring(0, maxDisplayLength); }
                         }
-                    } else {
-                        displayValue = displayValue.substring(0, maxDisplayLength);
-                    }
-                 }
-
-                 if (!isNaN(parseFloat(displayValue)) || displayValue === '0' || displayValue === '0.' || displayValue.includes('e') || displayValue === 'Error'){
-                    if (displayValue !== 'Error' && (isNaN(parseFloat(displayValue)) && !displayValue.includes('e') && displayValue !== '0.' && displayValue !== '0')) {
-                        displayValue = currentInput;
-                    } else {
-                         currentInput = displayValue;
-                    }
-                 } else if (currentInput.length > maxDisplayLength) {
-                     currentInput = currentInput.substring(0, maxDisplayLength);
-                     displayValue = currentInput;
-                 }
-
+                    } else { displayValue = displayValue.substring(0, maxDisplayLength); }
+                }
+                if (!isNaN(parseFloat(displayValue)) || ['0', '0.', 'Error'].includes(displayValue) || displayValue.includes('e')){
+                    if (displayValue !== 'Error' && isNaN(parseFloat(displayValue)) && !displayValue.includes('e') && !['0', '0.'].includes(displayValue)) { displayValue = currentInput; }
+                    else { currentInput = displayValue; }
+                } else if (currentInput.length > maxDisplayLength) { currentInput = currentInput.substring(0, maxDisplayLength); displayValue = currentInput; }
                 display.textContent = displayValue;
             }
-
-
-            // Function to handle digit input
             function inputDigit(digit) {
-                if (currentInput === 'Error') {
-                   resetCalculator();
-                }
-                 if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return;
-
-                if (waitingForSecondOperand) {
-                    currentInput = digit;
-                    waitingForSecondOperand = false;
-                } else {
-                    if (currentInput === '0' && digit !== '0') {
-                         currentInput = digit;
-                     } else if (currentInput !== '0') {
-                        currentInput += digit;
-                    }
-                }
+                if (currentInput === 'Error') { resetCalculator(); }
+                if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return;
+                if (waitingForSecondOperand) { currentInput = digit; waitingForSecondOperand = false; }
+                else { currentInput = (currentInput === '0' && digit !== '0') ? digit : (currentInput === '0' ? '0' : currentInput + digit); } // Fix starting with 0
                 updateDisplay();
             }
-
-            // Function to handle decimal input
             function inputDecimal() {
-                 if (currentInput === 'Error') {
-                    resetCalculator();
-                 }
+                if (currentInput === 'Error') { resetCalculator(); }
                 if (currentInput.length >= maxDisplayLength && !waitingForSecondOperand) return;
-
-                if (waitingForSecondOperand) {
-                    currentInput = '0.';
-                    waitingForSecondOperand = false;
-                    updateDisplay();
-                    return;
-                }
-
-                if (!currentInput.includes('.')) {
-                    currentInput += '.';
-                    updateDisplay();
-                }
+                if (waitingForSecondOperand) { currentInput = '0.'; waitingForSecondOperand = false; updateDisplay(); return; }
+                if (!currentInput.includes('.')) { currentInput += '.'; updateDisplay(); }
             }
-
-            // Function to handle operator input
             function handleOperator(nextOperator) {
                 if (currentInput === 'Error') return;
                 const inputValue = parseFloat(currentInput);
-
-                 if (operator && waitingForSecondOperand) {
-                     operator = nextOperator;
-                     return;
-                 }
-
-                 if (firstOperand !== null && operator && !waitingForSecondOperand) {
-                     const result = performCalculation();
-                     if (result === 'Error') {
-                         currentInput = 'Error';
-                         updateDisplay();
-                         resetCalculatorStateOnError();
-                         return;
-                     } else {
-                         currentInput = String(result);
-                         firstOperand = result;
-                         updateDisplay();
-                     }
-                 } else if (!isNaN(inputValue)){
-                     firstOperand = inputValue;
-                 }
-
-
-                waitingForSecondOperand = true;
-                operator = nextOperator;
+                if (operator && waitingForSecondOperand) { operator = nextOperator; return; }
+                if (firstOperand !== null && operator && !waitingForSecondOperand) {
+                    const result = performCalculation();
+                    if (result === 'Error') { currentInput = 'Error'; updateDisplay(); resetCalculatorStateOnError(); return; }
+                    else { currentInput = String(result); firstOperand = result; updateDisplay(); }
+                } else if (!isNaN(inputValue)){ firstOperand = inputValue; }
+                waitingForSecondOperand = true; operator = nextOperator;
             }
-
-            // Function to perform the calculation
-             function performCalculation() {
-                 if (operator === null || firstOperand === null) return parseFloat(currentInput);
-
-                 const secondOperand = parseFloat(currentInput);
-
-                 if (isNaN(firstOperand) || isNaN(secondOperand)) {
-                     console.error("Calculation error: Operands are NaN", firstOperand, secondOperand);
-                     return 'Error';
-                 }
-
-                 let result;
-
-                 switch (operator) {
-                     case '+': result = firstOperand + secondOperand; break;
-                     case '-': result = firstOperand - secondOperand; break;
-                     case '*': result = firstOperand * secondOperand; break;
-                     case '/':
-                         if (secondOperand === 0) return 'Error';
-                         result = firstOperand / secondOperand;
-                         break;
-                     default: return secondOperand;
-                 }
-
-                 if (!isFinite(result)) return 'Error';
-
-                  return result;
-             }
-
-            // Function to reset the calculator
-            function resetCalculator() {
-                currentInput = '0';
-                firstOperand = null;
-                operator = null;
-                waitingForSecondOperand = false;
-                updateDisplay();
+            function performCalculation() {
+                if (operator === null || firstOperand === null) return parseFloat(currentInput);
+                const secondOperand = parseFloat(currentInput);
+                if (isNaN(firstOperand) || isNaN(secondOperand)) { console.error("Calculation error: Operands are NaN", firstOperand, secondOperand); return 'Error'; }
+                let result;
+                switch (operator) {
+                    case '+': result = firstOperand + secondOperand; break;
+                    case '-': result = firstOperand - secondOperand; break;
+                    case '*': result = firstOperand * secondOperand; break;
+                    case '/': result = (secondOperand === 0) ? 'Error' : firstOperand / secondOperand; break;
+                    default: return secondOperand;
+                }
+                if (!isFinite(result)) return 'Error'; return result;
             }
-
-             // Function to reset calculator state after error
-             function resetCalculatorStateOnError() {
-                 firstOperand = null;
-                 operator = null;
-                 waitingForSecondOperand = false;
-             }
-
-            // Event listeners for number buttons
-            numberBtns.forEach(button => {
-                button.addEventListener('click', () => {
-                    const value = button.getAttribute('data-value');
-                    if (value === '.') { inputDecimal(); }
-                    else { inputDigit(value); }
-                });
-            });
-
-            // Event listeners for operator buttons
-            operatorBtns.forEach(button => {
-                button.addEventListener('click', () => {
-                    handleOperator(button.getAttribute('data-value'));
-                });
-            });
-
-            // Event listener for equals button
+            function resetCalculator() { currentInput = '0'; firstOperand = null; operator = null; waitingForSecondOperand = false; updateDisplay(); }
+            function resetCalculatorStateOnError() { firstOperand = null; operator = null; waitingForSecondOperand = false; }
+            numberBtns.forEach(button => button.addEventListener('click', () => { const value = button.getAttribute('data-value'); if (value === '.') { inputDecimal(); } else { inputDigit(value); } }));
+            operatorBtns.forEach(button => button.addEventListener('click', () => handleOperator(button.getAttribute('data-value'))));
             equalsBtn.addEventListener('click', () => {
                 if (currentInput === 'Error' || operator === null || firstOperand === null) return;
-
                 const result = performCalculation();
-                 if (result === 'Error') {
-                     currentInput = 'Error';
-                     resetCalculatorStateOnError();
-                 } else {
-                     currentInput = String(result);
-                     firstOperand = null;
-                     operator = null;
-                     waitingForSecondOperand = false;
-                 }
-                 updateDisplay();
+                if (result === 'Error') { currentInput = 'Error'; resetCalculatorStateOnError(); }
+                else { currentInput = String(result); firstOperand = null; operator = null; waitingForSecondOperand = false; }
+                updateDisplay();
             });
-
-            // Event listener for clear button
             clearBtn.addEventListener('click', resetCalculator);
-
-            // Keyboard Support
             document.addEventListener('keydown', event => {
-                let handled = false;
-                const key = event.key;
-
-                 if (currentInput === 'Error') {
-                     if (key === 'Escape' || key.toLowerCase() === 'c') {
-                         resetCalculator(); handled = true;
-                     } else if (/^\d|\./.test(key)) {
-                         resetCalculator();
-                     } else {
-                         handled = true;
-                     }
-                 }
-
-                 if (!handled) {
+                let handled = false; const key = event.key;
+                if (currentInput === 'Error') { if (key === 'Escape' || key.toLowerCase() === 'c') { resetCalculator(); handled = true; } else if (/^\d|\./.test(key)) { resetCalculator(); } else { handled = true; } }
+                if (!handled) {
                     if (/^\d$/.test(key)) { inputDigit(key); handled = true; }
                     else if (key === '.') { inputDecimal(); handled = true; }
                     else if (/^[+\-*/]$/.test(key)) { handleOperator(key); handled = true; }
                     else if (key === 'Enter' || key === '=') { equalsBtn.click(); handled = true; }
                     else if (key === 'Escape' || key.toLowerCase() === 'c') { clearBtn.click(); handled = true; }
-                    else if (key === 'Backspace') {
-                         if (!waitingForSecondOperand && currentInput !== '0' && currentInput !== 'Error') {
-                             currentInput = currentInput.slice(0, -1);
-                             if (currentInput === '') currentInput = '0';
-                             updateDisplay();
-                             handled = true;
-                         }
-                     }
-                 }
-
-
-                if (handled) {
-                    event.preventDefault();
-                    const button = findButtonForKey(key);
-                    if (button) {
-                        button.classList.add('active-key');
-                        setTimeout(() => button.classList.remove('active-key'), 100);
-                    }
+                    else if (key === 'Backspace') { if (!waitingForSecondOperand && currentInput !== '0' && currentInput !== 'Error') { currentInput = currentInput.slice(0, -1); if (currentInput === '') currentInput = '0'; updateDisplay(); handled = true; } }
                 }
+                if (handled) { event.preventDefault(); const button = findButtonForKey(key); if (button) { button.classList.add('active-key'); setTimeout(() => button.classList.remove('active-key'), 100); } }
             });
+            function findButtonForKey(key) {
+                if (/^\d|\./.test(key)) return document.querySelector(`.keypad-btn[data-value="${key}"]`);
+                if (/^[+\-*/]$/.test(key)) return document.querySelector(`.keypad-btn[data-value="${key}"]`);
+                if (key === 'Enter' || key === '=') return equalsBtn;
+                if (key === 'Escape' || key.toLowerCase() === 'c') return clearBtn; return null;
+            }
+            // --- END UNCHANGED CALCULATOR JS ---
 
-             function findButtonForKey(key) {
-                 if (/^\d|\./.test(key)) return document.querySelector(`.keypad-btn[data-value="${key}"]`);
-                 if (/^[+\-*/]$/.test(key)) return document.querySelector(`.keypad-btn[data-value="${key}"]`);
-                 if (key === 'Enter' || key === '=') return equalsBtn;
-                 if (key === 'Escape' || key.toLowerCase() === 'c') return clearBtn;
-                 return null;
-             }
 
-             // Bubble Animation Function
+            // --- MODIFIED BUBBLE ANIMATION JS ---
             function createBubbles() {
-                const bubbleCount = 30; // Number of bubbles
-                for (let i = 0; i < bubbleCount; i++) {
-                    setTimeout(spawnBubble, i * 50); // 300ms delay between each initial bubble
-                    /*spawnBubble();*/
-                }
+                const bubbleCount = 25; // Reduced count slightly for potentially better performance
+                const body = document.body;
 
-                // Function to spawn a single bubble with randomized properties
                 function spawnBubble() {
                     const bubble = document.createElement('div');
                     bubble.className = 'bubble';
 
-                    // Randomize size (10px to 50px)
-                    const size = Math.random() * 70 + 10;
-                    // Randomize horizontal position across viewport width
+                    // --- Randomize bubble properties ---
+                    // Size: Adjust range for variation
+                    const size = Math.random() * 70 + 15; // 15px to 85px
+                    // Start Position: Anywhere across width, start below screen
                     const posX = Math.random() * window.innerWidth;
-                    // Full color spectrum
-                    const hue = Math.random() * 360; 
-                    // 70-100% saturation
-                    const saturation = Math.random() * 30 + 70; 
-                    // Randomize animation delay for staggered effect
-                    const delay = Math.random() * 3;
-                    // Randomize animation duration for varying speeds (slower for gentle float)
-                    const duration = Math.random() * 10 + 15; // 15s to 25s duration
-                    // Randomize opacity (0.1 to 0.3 for subtle transparency)
-                    const opacity = Math.random() * 0.5 + 0.1;
-                    // Add random z-depth (0 to -30px)
-                    const zDepth = -(Math.random() * 30);
-                    // 60% chance for double layer
-                    const usePseudoElement = Math.random() > 0.6; 
-
-                    bubble.style.background = `hsla(${hue}, ${saturation}%, 70%, ${opacity})`; // Apply random opacity
+                    bubble.style.left = `${posX}px`;
+                    bubble.style.bottom = `-${size}px`; // Start off-screen
                     bubble.style.width = `${size}px`;
                     bubble.style.height = `${size}px`;
-                    bubble.style.left = `${posX}px`;
-                    bubble.style.bottom = `-${size}px`; // Start off-screen at bottom
+
+                    // Color: Using HSL for varied, potentially lighter colors
+                    const hue = Math.random() * 360;
+                    const saturation = Math.random() * 40 + 50; // 50-90% saturation
+                    const lightness = Math.random() * 20 + 70; // 70-90% lightness (mostly light)
+                    // Base Opacity (used in animation keyframes)
+                    const opacity = Math.random() * 0.70 + 0.05; // 0.05 to 0.65 opacity
+                    bubble.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1)`; // Opacity controlled by animation
+                    bubble.style.setProperty('--bubble-opacity', opacity); // Set CSS variable
+
+                     // Blur: Add subtle blur variation
+                    const blurAmount = Math.random() * 2.5 + 0.5; // 0.5px to 3px blur
+                    bubble.style.filter = `blur(${blurAmount}px)`;
+
+                    // --- Animation Customization ---
+                    // Duration: Varying speeds (longer duration = slower)
+                    const duration = Math.random() * 15 + 18; // 18s to 33s duration
                     bubble.style.animationDuration = `${duration}s`;
+                    // Delay: Stagger start times
+                    const delay = Math.random() * 5; // 0s to 5s delay
                     bubble.style.animationDelay = `${delay}s`;
-                    bubble.style.boxShadow = `0 0 10px hsla(${hue}, ${saturation}%, 50%, 0.3)`;
-                    bubble.style.zIndex = '1';
-                    // Apply 3D effects safely (no need for feature detection in modern browsers)
-                    bubble.style.transform = `translateZ(${zDepth}px)`;
 
-                    // Visual depth effects - simplified version that always works
-                    if (usePseudoElement) {
-                        bubble.style.boxShadow = `0 0 10px hsla(${hue}, ${saturation}%, 60%, 0.3)`;
-                        bubble.style.filter = 'blur(0.8px)';
-                    } else {
-                        bubble.style.boxShadow = `0 0 5px hsla(${hue}, ${saturation}%, 60%, 0.2)`;
-                    }
+                    // Horizontal Drift: Set CSS variables for keyframes
+                    // Drift amounts relative to bubble size or fixed pixels
+                    const horizontalDrift1 = (Math.random() - 0.5) * (size * 3); // Drift up to +/- bubble size
+                    const horizontalDrift2 = (Math.random() - 0.5) * (size * 4.5); // Different drift amount
+                    bubble.style.setProperty('--horizontal-drift-1', `${horizontalDrift1}px`);
+                    bubble.style.setProperty('--horizontal-drift-2', `${horizontalDrift2}px`);
 
-                    document.body.appendChild(bubble);
+                    // Rotation: Subtle random rotation
+                    const rotation = (Math.random() - 0.5) * 60; // +/- 30 degrees
+                    bubble.style.setProperty('--rotation-amount', `${rotation}deg`);
 
-                    // Remove bubble after animation completes to prevent too many bubbles
+                    // Scale: Slight pulsing effect
+                    const scaleFactor = 1 + (Math.random() * 0.15); // Scale between 1.0 and 1.15
+                    bubble.style.setProperty('--scale-factor', scaleFactor);
+
+
+                    body.appendChild(bubble);
+
+                    // --- Cleanup ---
+                    // Remove bubble after animation completes + delay + buffer
                     setTimeout(() => {
-                        bubble.remove();
-                        spawnBubble(); // Re-spawn a new bubble after one disappears for continuous effect
-                    }, duration * 1000);
+                         if (bubble.parentNode === body) {
+                            body.removeChild(bubble);
+                        }
+                        // Respawn a new bubble to maintain count (original logic)
+                        spawnBubble();
+                    }, (duration + delay + 1) * 1000); // Add 1s buffer
+                }
+
+                // Spawn initial bubbles with staggering
+                for (let i = 0; i < bubbleCount; i++) {
+                    setTimeout(spawnBubble, i * 200); // Increased stagger delay slightly
                 }
             }
 
             // Start bubble animation when page loads
             createBubbles();
 
-
-             // Ensure active-key style exists (for keyboard feedback)
-             const styleSheetExists = Array.from(document.head.querySelectorAll('style')).some(s => s.id === 'active-key-style');
-             if (!styleSheetExists) {
-                 const styleSheet = document.createElement("style");
-                 styleSheet.id = 'active-key-style';
-                 styleSheet.type = "text/css";
-                 styleSheet.innerText = `.active-key { transform: translate(2px, 2px); box-shadow: none !important; }`;
-                 document.head.appendChild(styleSheet);
+            // --- UNCHANGED active-key style injection ---
+            const styleSheetExists = !!document.getElementById('active-key-style');
+            if (!styleSheetExists) {
+                const styleSheet = document.createElement("style");
+                styleSheet.id = 'active-key-style'; styleSheet.type = "text/css";
+                styleSheet.innerText = `.active-key { transform: translate(2px, 2px); box-shadow: none !important; }`;
+                document.head.appendChild(styleSheet);
             }
 
             // Initial display update
