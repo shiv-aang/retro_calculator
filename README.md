@@ -7,3 +7,4 @@ v1.1: Design changes.
 v1.2: Minor design fixes, color changes.
 v1.3: Adding animated elements to the background.
 v1.4: Cleaned up code and modified the background animation.
+v1.5: Minor adjustments.
